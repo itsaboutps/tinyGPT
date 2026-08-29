@@ -33,7 +33,8 @@ print(x.grad)
 #     ↓
 # gradient
 
-# which will Become
+#! which will Become
+
 # GPT forward pass
 #     ↓
 # loss
