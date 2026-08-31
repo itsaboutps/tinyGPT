@@ -1,0 +1,24 @@
+{
+  "tokenizer_path": "data\\tokenizer\\tokenizer.json",
+  "tokenizer_sha256": "b1166e9525dedb52b64172d07d20217740466d6765557ad78f0c851d90f567b9",
+  "vocab_size": 1024,
+  "splits": {
+    "train": {
+      "characters": 4708093,
+      "utf8_bytes": 4719756,
+      "tokens": 1492430
+    },
+    "val": {
+      "characters": 261561,
+      "utf8_bytes": 261561,
+      "tokens": 85302
+    },
+    "test": {
+      "characters": 261561,
+      "utf8_bytes": 261561,
+      "tokens": 83181
+    }
+  }
+  
+}
+

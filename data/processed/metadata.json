@@ -1,0 +1,11 @@
+{
+  "source": "data/raw/input.txt",
+  "sha256": "7992ecd2062c15d6b3161d277c0c1bbf29e355d4a84bda9e1724f8efd3a617ea",
+  "total_characters": 5231215,
+  "train_characters": 4708093,
+  "validation_characters": 261561,
+  "test_characters": 261561,
+  "train_fraction": 0.9,
+  "validation_fraction": 0.05,
+  "test_fraction": 0.05
+}
