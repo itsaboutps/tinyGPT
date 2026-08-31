@@ -1,0 +1,31 @@
+{
+  "experiment_name": "tinystories_5mb_v1",
+  "model_config": {
+    "vocab_size": 1024,
+    "context_length": 128,
+    "d_model": 128,
+    "n_heads": 4,
+    "n_layers": 4,
+    "d_ff": 384,
+    "rope_base": 10000.0,
+    "rms_norm_eps": 1e-05
+  },
+  "training_config": {
+    "batch_size": 8,
+    "learning_rate": 0.0003,
+    "min_learning_rate": 3e-05,
+    "weight_decay": 0.1,
+    "grad_clip_norm": 1.0,
+    "warmup_steps": 50,
+    "max_steps": 1000,
+    "log_interval": 10,
+    "eval_interval": 100,
+    "eval_batches": 10,
+    "seed": 42,
+    "checkpoint_interval": 50
+  },
+  "tokenizer_sha256": "b1166e9525dedb52b64172d07d20217740466d6765557ad78f0c851d90f567b9",
+  "token_data_metadata_sha256": "aea1584f43be431b99030a9bb5b9cec5b6ee062ad7e38b605ae99efcfbc67990",
+  "python_version": "3.14.4",
+  "torch_version": "2.13.0+cpu"
+}
