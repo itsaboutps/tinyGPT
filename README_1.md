@@ -1,10 +1,61 @@
+RAW TEXT
+    ↓
+Data cleaning/splitting                   ✅
+    ↓
+Byte-level BPE training                   ✅
+    ↓
+Tokenized train/val/test                  ✅
+    ↓
+Training batches                          ✅
+    ↓
+Token embeddings                          ✅
+    ↓
+RMSNorm                                   ✅
+    ↓
+Q/K/V                                     ✅
+    ↓
+RoPE                                      ✅
+    ↓
+Multi-head causal attention               ✅
+    ↓
+SwiGLU                                    ✅
+    ↓
+Transformer blocks                        ✅
+    ↓
+Complete TinyGPT                          ✅
+    ↓
+Cross-entropy                             ✅
+    ↓
+Backprop                                  ✅
+    ↓
+AdamW                                     ✅
+    ↓
+Gradient clipping                         ✅
+    ↓
+LR scheduling                             ✅
+    ↓
+Validation/perplexity                     ✅
+    ↓
+Checkpoint/best/resume                    ✅
+    ↓
+Load trained model                        ✅
+    ↓
+Autoregressive generation                 ✅
+    ↓
+Greedy / temperature / top-k / top-p      ✅
+    ↓
+GENERATED TEXT                            ✅
+
+
+
+
 # TinyGPT Technical Onboarding
 
 ## Complete End-to-End Architecture, Data, Training, Checkpointing, and Generation Guide
 
-**Project status:** Base TinyGPT lifecycle completed through Topic 20  
-**Current phase:** Ready for Topic 21 — base-model evaluation and learning analysis  
-**Development environment:** Windows 11, Python 3.14.4, PyTorch 2.13.0 CPU build, 32 GB RAM, Intel Core Ultra 7 265U  
+**Project status:** Base TinyGPT lifecycle completed through Topic 20
+**Current phase:** Ready for Topic 21 — base-model evaluation and learning analysis
+**Development environment:** Windows 11, Python 3.14.4, PyTorch 2.13.0 CPU build, 32 GB RAM, Intel Core Ultra 7 265U
 **Primary purpose:** Learn how a GPT-style language model works by building the complete system from first principles at a scale that can run on a personal CPU-only laptop
 
 ---
@@ -38,8 +89,7 @@ This document describes the complete TinyGPT system designed and implemented thr
 
 The project was built progressively, with a diagnostic script for nearly every component.
 
-The directly uploaded and inspected source file was `scripts/train.py`. That file confirms that the training entrypoint composes the model configuration, token dataset, TinyGPT model, evaluator, optimizer, scheduler, training step, device utilities, parameter utilities, checkpoint manager, and hashing utilities. fileciteturn0file0L5-L39 fileciteturn0file0L44-L57
-
+The directly uploaded and inspected source file was `scripts/train.py`. That file confirms that the training entrypoint composes the model configuration, token dataset, TinyGPT model, evaluator, optimizer, scheduler, training step, device utilities, parameter utilities, checkpoint manager, and hashing utilities.
 The uploaded version of `train.py` originally had checkpoint/resume control flow in the wrong place. A corrected version was produced, the stale experiment-directory conflict was resolved, and the user confirmed that issue was sorted. The descriptions below reflect the intended corrected architecture.
 
 The other file descriptions reflect the implementations built during the project. They have not all been independently reopened from the user’s local laptop in one final repository-wide audit.
@@ -108,19 +158,19 @@ The current model is a **base language model**. It predicts continuations based 
 
 It has not yet received:
 
-- Instruction-following fine-tuning
-- System, user, and assistant role formatting
-- Assistant-only loss masking
-- Preference optimization
-- RLHF
-- DPO
-- Safety alignment
-- Tool use
-- Retrieval
-- Conversation-memory management
-- A production inference server
-- A KV cache
-- Distributed training
+* Instruction-following fine-tuning
+* System, user, and assistant role formatting
+* Assistant-only loss masking
+* Preference optimization
+* RLHF
+* DPO
+* Safety alignment
+* Tool use
+* Retrieval
+* Conversation-memory management
+* A production inference server
+* A KV cache
+* Distributed training
 
 The current model may learn to generate short story-like text because it is trained on a TinyStories subset. It is not yet trained to respond helpfully to questions or follow arbitrary instructions.
 
@@ -136,20 +186,20 @@ Instead, the project exposes the machinery hidden by high-level libraries.
 
 The developer learns:
 
-- Why text must become token IDs
-- How a BPE vocabulary is learned
-- Why token IDs need embeddings
-- Why order information is needed
-- How Query, Key, and Value are calculated
-- Why attention scores have shape `[B, H, T, T]`
-- Why future tokens must be causally masked
-- How multiple heads are combined
-- Why Transformer blocks contain both attention and MLP sublayers
-- How cross-entropy measures prediction error
-- How gradients travel backward
-- What an optimizer actually updates
-- How a model is saved and resumed
-- How generated tokens are sampled one at a time
+* Why text must become token IDs
+* How a BPE vocabulary is learned
+* Why token IDs need embeddings
+* Why order information is needed
+* How Query, Key, and Value are calculated
+* Why attention scores have shape `[B, H, T, T]`
+* Why future tokens must be causally masked
+* How multiple heads are combined
+* Why Transformer blocks contain both attention and MLP sublayers
+* How cross-entropy measures prediction error
+* How gradients travel backward
+* What an optimizer actually updates
+* How a model is saved and resumed
+* How generated tokens are sampled one at a time
 
 ---
 
@@ -204,16 +254,16 @@ The tokenizer is the source of truth for vocabulary size.
 
 The project uses several standard dimension names.
 
-| Symbol | Meaning |
-|---|---|
-| `B` | Batch size |
-| `T` | Sequence length or number of token positions |
-| `C` | Main model width, also called `d_model` |
-| `H` | Number of attention heads |
-| `D` | Dimension per attention head |
-| `F` | Feed-forward or SwiGLU hidden dimension |
-| `V` | Vocabulary size |
-| `N` | Number of tokens in an entire stored split |
+| Symbol | Meaning                                      |
+| ------ | -------------------------------------------- |
+| `B`    | Batch size                                   |
+| `T`    | Sequence length or number of token positions |
+| `C`    | Main model width, also called `d_model`      |
+| `H`    | Number of attention heads                    |
+| `D`    | Dimension per attention head                 |
+| `F`    | Feed-forward or SwiGLU hidden dimension      |
+| `V`    | Vocabulary size                              |
+| `N`    | Number of tokens in an entire stored split   |
 
 For the default model:
 
@@ -477,20 +527,20 @@ This separation prevents a single file from becoming responsible for every conce
 
 For example, the attention implementation does not know:
 
-- Where the dataset is stored
-- Which checkpoint directory is used
-- How the tokenizer was trained
-- Which command starts training
-- Whether generation uses top-k
+* Where the dataset is stored
+* Which checkpoint directory is used
+* How the tokenizer was trained
+* Which command starts training
+* Whether generation uses top-k
 
 It receives a tensor and performs attention.
 
 Likewise, the tokenizer does not know:
 
-- How many Transformer blocks exist
-- Which optimizer is used
-- Whether the model is on CPU or GPU
-- How validation loss is calculated
+* How many Transformer blocks exist
+* Which optimizer is used
+* Whether the model is on CPU or GPU
+* How validation loss is calculated
 
 This is one of the project’s main scalability principles:
 
@@ -555,11 +605,11 @@ datasets
 
 PyTorch provides:
 
-- Tensors
-- Neural-network layers
-- Automatic differentiation
-- Optimizers
-- Model serialization
+* Tensors
+* Neural-network layers
+* Automatic differentiation
+* Optimizers
+* Model serialization
 
 The Hugging Face `datasets` package is used only for streaming a manageable TinyStories subset.
 
@@ -590,13 +640,13 @@ This is intended to become the short public-facing entrypoint for the repository
 
 It should eventually explain:
 
-- What TinyGPT is
-- Installation commands
-- Dataset-preparation commands
-- Training command
-- Resume command
-- Generation command
-- Model limitations
+* What TinyGPT is
+* Installation commands
+* Dataset-preparation commands
+* Training command
+* Resume command
+* Generation command
+* Model limitations
 
 The current onboarding document contains much more detail than a normal README.
 
@@ -863,9 +913,9 @@ Base random seed:
 
 Different deterministic offsets are used for:
 
-- Training batch sampling
-- Training evaluation sampling
-- Validation evaluation sampling
+* Training batch sampling
+* Training evaluation sampling
+* Validation evaluation sampling
 
 ## 8.3 `DataConfig`
 
@@ -993,10 +1043,10 @@ CUDA generators, when available
 
 Randomness is used in:
 
-- Weight initialization
-- Training-window sampling
-- Text-generation sampling
-- Any future dropout
+* Weight initialization
+* Training-window sampling
+* Text-generation sampling
+* Any future dropout
 
 A fixed seed improves reproducibility.
 
@@ -1025,12 +1075,12 @@ requires_grad == True
 
 It does not include:
 
-- Gradients
-- Optimizer moments
-- Activations
-- Attention matrices
-- Temporary tensors
-- Dataset memory
+* Gradients
+* Optimizer moments
+* Activations
+* Attention matrices
+* Temporary tensors
+* Dataset memory
 
 ## 9.4 `hashing.py`
 
@@ -1098,12 +1148,12 @@ It removes null bytes:
 
 It does not:
 
-- Lowercase the text
-- Remove punctuation
-- Remove spaces
-- Remove newlines
-- Stem words
-- Strip all formatting
+* Lowercase the text
+* Remove punctuation
+* Remove spaces
+* Remove newlines
+* Stem words
+* Strip all formatting
 
 Case, punctuation, and formatting are useful language-model signals.
 
@@ -1269,8 +1319,8 @@ Contains the training portion of normalized raw text.
 
 This is the only split used to:
 
-- Train tokenizer merge rules
-- Sample weight-updating training batches
+* Train tokenizer merge rules
+* Sample weight-updating training batches
 
 ## 11.3 `data/processed/val.txt`
 
@@ -1338,9 +1388,9 @@ It defines the meaning of every token ID above the base byte range.
 
 This file must remain paired with:
 
-- Tokenized `.pt` files
-- Model checkpoints
-- Generated text
+* Tokenized `.pt` files
+* Model checkpoints
+* Generated text
 
 Retraining the tokenizer can change token meanings even when vocabulary size stays the same.
 
@@ -1885,10 +1935,10 @@ register_buffer(...)
 
 It:
 
-- Belongs to the model
-- Moves with the model to CPU or GPU
-- Is not optimized
-- Is not a trainable parameter
+* Belongs to the model
+* Moves with the model to CPU or GPU
+* Is not optimized
+* Is not a trainable parameter
 
 ### Input and output
 
@@ -2155,15 +2205,15 @@ This file implements `RMSNorm`.
 
 For each token vector, it computes:
 
-\[
+$$
 RMS(x)=\sqrt{\text{mean}(x^2)+\epsilon}
-\]
+$$
 
 Then:
 
-\[
+$$
 \hat{x}=x/RMS(x)
-\]
+$$
 
 Finally, it multiplies by a learned scale vector:
 
@@ -2332,10 +2382,10 @@ nn.ModuleList([
 
 `ModuleList` ensures all block parameters are:
 
-- Registered
-- Included in `model.parameters()`
-- Moved by `model.to(device)`
-- Saved in `state_dict()`
+* Registered
+* Included in `model.parameters()`
+* Moved by `model.to(device)`
+* Saved in `state_dict()`
 
 For the current model, it creates four independent blocks.
 
@@ -2381,11 +2431,11 @@ dtype: torch.long
 
 Validation checks:
 
-- Exactly two dimensions
-- Correct integer dtype
-- Sequence does not exceed context length
-- Token IDs are nonnegative
-- Token IDs are less than vocabulary size
+* Exactly two dimensions
+* Correct integer dtype
+* Sequence does not exceed context length
+* Token IDs are nonnegative
+* Token IDs are less than vocabulary size
 
 Then:
 
@@ -2434,9 +2484,9 @@ The same `Parameter` object is referenced in both places.
 
 This:
 
-- Reduces parameter count
-- Couples input and output token representations
-- Causes gradients from both roles to accumulate into the same shared matrix
+* Reduces parameter count
+* Couples input and output token representations
+* Causes gradients from both roles to accumulate into the same shared matrix
 
 ### Initialization
 
@@ -2607,10 +2657,10 @@ targets: [B,T]
 
 Validation checks:
 
-- Logits have three dimensions
-- Targets have two dimensions
-- Batch and sequence dimensions match
-- Targets use `torch.long`
+* Logits have three dimensions
+* Targets have two dimensions
+* Batch and sequence dimensions match
+* Targets use `torch.long`
 
 Cross-entropy expects examples in the form:
 
@@ -2650,9 +2700,9 @@ It does not apply softmax manually because cross-entropy already performs the nu
 
 For one prediction:
 
-\[
+$$
 loss=-\log P(\text{correct token})
-\]
+$$
 
 If the model assigns high probability to the correct token, loss is small.
 
@@ -2660,9 +2710,9 @@ If it assigns very low probability to the correct token, loss is large.
 
 A roughly uniform untrained model has expected loss near:
 
-\[
+$$
 \log(V)
-\]
+$$
 
 For `V=1024`:
 
@@ -2686,10 +2736,10 @@ receive weight decay.
 
 These generally include:
 
-- Embedding matrix
-- QKV matrix
-- Attention output projection
-- SwiGLU matrices
+* Embedding matrix
+* QKV matrix
+* Attention output projection
+* SwiGLU matrices
 
 ### No-decay group
 
@@ -2701,9 +2751,9 @@ These are primarily RMSNorm scaling vectors.
 
 AdamW tracks running estimates of:
 
-- Gradient direction
-- Squared-gradient magnitude
-- Per-parameter optimization step
+* Gradient direction
+* Squared-gradient magnitude
+* Per-parameter optimization step
 
 It uses adaptive updates and decoupled weight decay.
 
@@ -2834,9 +2884,9 @@ It:
 
 Perplexity is:
 
-\[
+$$
 e^{loss}
-\]
+$$
 
 The same fixed evaluation seed is reused at different checkpoints.
 
@@ -2895,11 +2945,11 @@ This reduces the chance that an interrupted write destroys the last valid checkp
 
 Resume checks:
 
-- Checkpoint version
-- Exact model configuration
-- Exact training configuration
-- Tokenizer fingerprint
-- Token-data metadata fingerprint
+* Checkpoint version
+* Exact model configuration
+* Exact training configuration
+* Tokenizer fingerprint
+* Token-data metadata fingerprint
 
 Resume is intentionally strict.
 
@@ -2952,21 +3002,20 @@ It connects otherwise independent modules.
 
 The uploaded file confirms that the entrypoint imports:
 
-- Model and training configuration
-- `TokenDataset`
-- `TinyGPT`
-- `BPETokenizer`
-- Evaluation
-- Optimizer construction
-- Learning-rate scheduling
-- Training-step logic
-- Device selection
-- Parameter reporting
-- Random seeding
-- Checkpoint management
-- File hashing fileciteturn0file0L5-L39 fileciteturn0file0L44-L57
-
-It also loads the tokenizer, calculates fingerprints, creates model configuration from tokenizer vocabulary size, loads train and validation token datasets, constructs the model, constructs AdamW, and creates a dedicated training generator. fileciteturn0file0L115-L188
+* Model and training configuration
+* `TokenDataset`
+* `TinyGPT`
+* `BPETokenizer`
+* Evaluation
+* Optimizer construction
+* Learning-rate scheduling
+* Training-step logic
+* Device selection
+* Parameter reporting
+* Random seeding
+* Checkpoint management
+* File hashing
+  It also loads the tokenizer, calculates fingerprints, creates model configuration from tokenizer vocabulary size, loads train and validation token datasets, constructs the model, constructs AdamW, and creates a dedicated training generator.
 
 The corrected lifecycle should be understood as follows.
 
@@ -3279,25 +3328,25 @@ This suggests memorization of the training subset.
 
 Possible causes:
 
-- Learning rate too low
-- Dataset too small or poorly prepared
-- Targets not shifted correctly
-- Gradients not reaching parameters
-- Optimizer missing parameters
-- Parameters not changing
-- Severe architecture bug
-- Inadequate number of training steps
+* Learning rate too low
+* Dataset too small or poorly prepared
+* Targets not shifted correctly
+* Gradients not reaching parameters
+* Optimizer missing parameters
+* Parameters not changing
+* Severe architecture bug
+* Inadequate number of training steps
 
 ## 19.4 NaN or infinity
 
 Possible causes:
 
-- Numerical instability
-- Excessive learning rate
-- Exploding gradients
-- Invalid logits
-- Invalid input token IDs
-- Division or masking error
+* Numerical instability
+* Excessive learning rate
+* Exploding gradients
+* Invalid logits
+* Invalid input token IDs
+* Division or masking error
 
 Gradient clipping and normalization reduce risk but do not make every failure impossible.
 
@@ -3309,12 +3358,12 @@ A functioning model should be able to drive that batch’s loss downward.
 
 If it cannot, the system may have a fundamental problem in:
 
-- Data-target alignment
-- Forward pass
-- Loss
-- Gradient flow
-- Optimizer setup
-- Learning rate
+* Data-target alignment
+* Forward pass
+* Loss
+* Gradient flow
+* Optimizer setup
+* Learning rate
 
 ---
 
@@ -3452,12 +3501,12 @@ optional random generator
 
 Behavior:
 
-- `temperature == 0` uses greedy `argmax`
-- Otherwise divide logits by temperature
-- Apply top-k
-- Apply top-p
-- Apply softmax
-- Sample one token using `torch.multinomial`
+* `temperature == 0` uses greedy `argmax`
+* Otherwise divide logits by temperature
+* Apply top-k
+* Apply top-p
+* Apply softmax
+* Sample one token using `torch.multinomial`
 
 ### Temperature
 
@@ -3519,8 +3568,11 @@ A batch dimension is added:
 For each new token:
 
 1. Keep only the last `context_length` token IDs
+
 2. Run the model
+
 3. Obtain logits with shape `[1,T,V]`
+
 4. Select only the last position:
 
    ```text
@@ -3528,6 +3580,7 @@ For each new token:
    ```
 
 5. Sample or greedily choose one token
+
 6. Append the new token:
 
    ```text
@@ -3535,6 +3588,7 @@ For each new token:
    ```
 
 7. Stop if EOS was generated
+
 8. Otherwise repeat
 
 ### Why the last position is used
@@ -3553,11 +3607,11 @@ The complete token sequence is still retained for final decoding.
 
 At the end:
 
-- Full token sequence is decoded
-- Newly generated token portion is decoded
-- Token IDs are returned
-- New-token count is returned
-- EOS-stop status is returned
+* Full token sequence is decoded
+* Newly generated token portion is decoded
+* Token IDs are returned
+* New-token count is returned
+* EOS-stop status is returned
 
 The full sequence is decoded together because byte-level BPE tokens may not each be valid standalone UTF-8 strings.
 
@@ -3674,10 +3728,10 @@ A production interface would stream pieces while safely managing partial UTF-8 b
 
 There is currently no:
 
-- Repetition penalty
-- Frequency penalty
-- Presence penalty
-- No-repeat n-gram rule
+* Repetition penalty
+* Frequency penalty
+* Presence penalty
+* No-repeat n-gram rule
 
 Small models may repeat phrases.
 
@@ -3705,124 +3759,124 @@ These scripts are intentionally small so failures can be isolated.
 
 ## 24.1 Environment and tensor foundations
 
-| File | Internal behavior and purpose |
-|---|---|
-| `check_environment.py` | Prints Python version, OS information, and exact interpreter path. Confirms VS Code and terminal use `.venv`. |
-| `check_torch.py` | Imports PyTorch, prints version and selected device, creates a test tensor, moves it to the device, and prints its shape/device. |
-| `tensor_basics.py` | Demonstrates scalars, vectors, matrices, three-dimensional tensors, `[B,T,C]`, indexing, slicing, reshape, transpose, matrix multiplication, broadcasting, stacking, concatenation, and softmax. |
-| `autograd_basics.py` | Creates a scalar with `requires_grad=True`, calculates `x²`, calls `backward()`, and verifies the derivative at `x=3` is 6. |
+| File                   | Internal behavior and purpose                                                                                                                                                                    |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `check_environment.py` | Prints Python version, OS information, and exact interpreter path. Confirms VS Code and terminal use `.venv`.                                                                                    |
+| `check_torch.py`       | Imports PyTorch, prints version and selected device, creates a test tensor, moves it to the device, and prints its shape/device.                                                                 |
+| `tensor_basics.py`     | Demonstrates scalars, vectors, matrices, three-dimensional tensors, `[B,T,C]`, indexing, slicing, reshape, transpose, matrix multiplication, broadcasting, stacking, concatenation, and softmax. |
+| `autograd_basics.py`   | Creates a scalar with `requires_grad=True`, calculates `x²`, calls `backward()`, and verifies the derivative at `x=3` is 6.                                                                      |
 
 ## 24.2 Configuration and reproducibility
 
-| File | Internal behavior and purpose |
-|---|---|
-| `check_config.py` | Constructs model and training configurations, prints them, checks calculated `head_dim`, and can deliberately test invalid divisibility. |
-| `check_seed.py` | Resets the seed twice and proves the same random tensor is generated both times. |
-| `check_experiment.py` | Combines configuration, seeding, device detection, and a reproducible random tensor into one experiment bootstrap check. |
+| File                  | Internal behavior and purpose                                                                                                            |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `check_config.py`     | Constructs model and training configurations, prints them, checks calculated `head_dim`, and can deliberately test invalid divisibility. |
+| `check_seed.py`       | Resets the seed twice and proves the same random tensor is generated both times.                                                         |
+| `check_experiment.py` | Combines configuration, seeding, device detection, and a reproducible random tensor into one experiment bootstrap check.                 |
 
 ## 24.3 Dataset acquisition and preparation
 
-| File | Internal behavior and purpose |
-|---|---|
+| File                      | Internal behavior and purpose                                                                                                                              |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `download_tinystories.py` | Streams TinyStories examples, writes stories separated by blank lines, tracks UTF-8 bytes, and stops near the configured target size, approximately 5 MiB. |
-| `prepare_data.py` | Loads raw text, normalizes line endings, splits 90/5/5, verifies lengths, writes train/val/test files, and creates processed metadata. |
-| `check_dataset_sizes.py` | Loads train, validation, and test token tensors and prints token counts. Confirms validation is comfortably larger than the context window. |
+| `prepare_data.py`         | Loads raw text, normalizes line endings, splits 90/5/5, verifies lengths, writes train/val/test files, and creates processed metadata.                     |
+| `check_dataset_sizes.py`  | Loads train, validation, and test token tensors and prints token counts. Confirms validation is comfortably larger than the context window.                |
 
 ## 24.4 Tokenization learning scripts
 
-| File | Internal behavior and purpose |
-|---|---|
-| `check_char_tokenizer.py` | Builds a character vocabulary from training text, prints visible representations of early vocabulary entries, and verifies encode/decode round trip. |
-| `check_bytes.py` | Displays UTF-8 byte sequences for ASCII, accented text, and emoji. Demonstrates that one Unicode character can require multiple bytes. |
-| `check_byte_tokenizer.py` | Encodes and decodes multilingual and emoji examples using raw byte IDs and confirms no text OOV problem. |
-| `inspect_tokenization.py` | Encodes a training-text sample with the byte tokenizer, compares character and token counts, prints IDs, and verifies round trip. |
-| `check_bpe.py` | Trains a very small BPE tokenizer on repetitive text such as `banana bandana`, compares raw bytes with BPE-token count, and verifies exact decode. |
-| `train_tokenizer.py` | Loads representative training text, takes a bounded tokenizer-training subset, trains byte-level BPE, calculates compression statistics, verifies round trip, and saves `tokenizer.json`. |
-| `check_saved_tokenizer.py` | Reloads `tokenizer.json` and tests English, accented text, Hindi, and emoji. Confirms persistence and byte fallback. |
+| File                       | Internal behavior and purpose                                                                                                                                                             |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `check_char_tokenizer.py`  | Builds a character vocabulary from training text, prints visible representations of early vocabulary entries, and verifies encode/decode round trip.                                      |
+| `check_bytes.py`           | Displays UTF-8 byte sequences for ASCII, accented text, and emoji. Demonstrates that one Unicode character can require multiple bytes.                                                    |
+| `check_byte_tokenizer.py`  | Encodes and decodes multilingual and emoji examples using raw byte IDs and confirms no text OOV problem.                                                                                  |
+| `inspect_tokenization.py`  | Encodes a training-text sample with the byte tokenizer, compares character and token counts, prints IDs, and verifies round trip.                                                         |
+| `check_bpe.py`             | Trains a very small BPE tokenizer on repetitive text such as `banana bandana`, compares raw bytes with BPE-token count, and verifies exact decode.                                        |
+| `train_tokenizer.py`       | Loads representative training text, takes a bounded tokenizer-training subset, trains byte-level BPE, calculates compression statistics, verifies round trip, and saves `tokenizer.json`. |
+| `check_saved_tokenizer.py` | Reloads `tokenizer.json` and tests English, accented text, Hindi, and emoji. Confirms persistence and byte fallback.                                                                      |
 
 ## 24.5 Token dataset and batching scripts
 
-| File | Internal behavior and purpose |
-|---|---|
-| `prepare_tokens.py` | Loads the frozen tokenizer, reads each split, separates documents by blank lines, encodes each document with EOS, saves one-dimensional `torch.long` tensors, and writes token metadata. |
-| `check_token_dataset.py` | Loads one token split, retrieves one window, prints input/target IDs, decodes them, and demonstrates the one-token shift. |
-| `check_batch.py` | Samples a reproducible mini-batch, prints `[B,T]` shapes and dtypes, and decodes the first input/target pair. |
+| File                     | Internal behavior and purpose                                                                                                                                                            |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `prepare_tokens.py`      | Loads the frozen tokenizer, reads each split, separates documents by blank lines, encodes each document with EOS, saves one-dimensional `torch.long` tensors, and writes token metadata. |
+| `check_token_dataset.py` | Loads one token split, retrieves one window, prints input/target IDs, decodes them, and demonstrates the one-token shift.                                                                |
+| `check_batch.py`         | Samples a reproducible mini-batch, prints `[B,T]` shapes and dtypes, and decodes the first input/target pair.                                                                            |
 
 ## 24.6 Embedding and positional scripts
 
-| File | Internal behavior and purpose |
-|---|---|
-| `check_embeddings.py` | Constructs token embeddings, prints matrix shape, encodes sample text, verifies `[B,T] → [B,T,C]`, and proves forward output equals direct row lookup. |
-| `check_embedding_gradients.py` | Uses repeated token IDs and a simple fake loss to show that only used embedding rows receive gradients and repeated IDs accumulate larger gradients. |
-| `check_model_input.py` | Connects real dataset batch to the embedding layer and verifies `[8,128] → [8,128,128]`. |
-| `check_positions.py` | Shows that repeated token IDs have identical raw embeddings but different representations after adding learned positional embeddings. |
-| `check_rope_math.py` | Prints RoPE dimension indices, inverse frequencies, position-angle matrix, cosine values, and sine values. |
-| `check_rope.py` | Applies RoPE to `[B,H,T,D]`, verifies shape preservation, position-zero identity, later-position change, and norm preservation. |
+| File                           | Internal behavior and purpose                                                                                                                          |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `check_embeddings.py`          | Constructs token embeddings, prints matrix shape, encodes sample text, verifies `[B,T] → [B,T,C]`, and proves forward output equals direct row lookup. |
+| `check_embedding_gradients.py` | Uses repeated token IDs and a simple fake loss to show that only used embedding rows receive gradients and repeated IDs accumulate larger gradients.   |
+| `check_model_input.py`         | Connects real dataset batch to the embedding layer and verifies `[8,128] → [8,128,128]`.                                                               |
+| `check_positions.py`           | Shows that repeated token IDs have identical raw embeddings but different representations after adding learned positional embeddings.                  |
+| `check_rope_math.py`           | Prints RoPE dimension indices, inverse frequencies, position-angle matrix, cosine values, and sine values.                                             |
+| `check_rope.py`                | Applies RoPE to `[B,H,T,D]`, verifies shape preservation, position-zero identity, later-position change, and norm preservation.                        |
 
 ## 24.7 Attention scripts
 
-| File | Internal behavior and purpose |
-|---|---|
-| `check_qkv.py` | Creates separate Query, Key, and Value projections; prints weight and output shapes; calculates raw `QKᵀ` attention scores. |
-| `check_attention_head.py` | Runs one causal attention head, prints output shape and parameter count, inspects attention weights, verifies rows sum to one, and confirms future attention is zero. |
-| `check_multihead_attention.py` | Runs fused multi-head attention, verifies `[B,T,C] → [B,H,T,T] → [B,T,C]`, checks parameter count, causal masking, and row normalization. |
+| File                           | Internal behavior and purpose                                                                                                                                         |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `check_qkv.py`                 | Creates separate Query, Key, and Value projections; prints weight and output shapes; calculates raw `QKᵀ` attention scores.                                           |
+| `check_attention_head.py`      | Runs one causal attention head, prints output shape and parameter count, inspects attention weights, verifies rows sum to one, and confirms future attention is zero. |
+| `check_multihead_attention.py` | Runs fused multi-head attention, verifies `[B,T,C] → [B,H,T,T] → [B,T,C]`, checks parameter count, causal masking, and row normalization.                             |
 
 ## 24.8 Normalization and MLP scripts
 
-| File | Internal behavior and purpose |
-|---|---|
-| `check_rmsnorm.py` | Applies RMSNorm to scaled random values, verifies shape preservation, parameter count, output RMS near one at initialization, and norm-weight gradients. |
-| `check_attention_residual.py` | Applies Pre-Norm attention and adds the residual, confirming all shapes remain `[B,T,C]`. |
-| `check_silu.py` | Prints SiLU output for negative, zero, and positive values. Demonstrates smooth nonlinear behavior. |
-| `check_swiglu.py` | Runs the SwiGLU network, prints hidden and output shapes, and verifies its parameter count. |
-| `check_mlp_independence.py` | Changes one token position and proves the MLP changes that position but not other positions, demonstrating position-wise processing. |
-| `check_mlp_residual.py` | Applies RMSNorm, SwiGLU, and residual addition and verifies shape preservation. |
+| File                          | Internal behavior and purpose                                                                                                                            |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `check_rmsnorm.py`            | Applies RMSNorm to scaled random values, verifies shape preservation, parameter count, output RMS near one at initialization, and norm-weight gradients. |
+| `check_attention_residual.py` | Applies Pre-Norm attention and adds the residual, confirming all shapes remain `[B,T,C]`.                                                                |
+| `check_silu.py`               | Prints SiLU output for negative, zero, and positive values. Demonstrates smooth nonlinear behavior.                                                      |
+| `check_swiglu.py`             | Runs the SwiGLU network, prints hidden and output shapes, and verifies its parameter count.                                                              |
+| `check_mlp_independence.py`   | Changes one token position and proves the MLP changes that position but not other positions, demonstrating position-wise processing.                     |
+| `check_mlp_residual.py`       | Applies RMSNorm, SwiGLU, and residual addition and verifies shape preservation.                                                                          |
 
 ## 24.9 Transformer and complete-model scripts
 
-| File | Internal behavior and purpose |
-|---|---|
-| `check_transformer_block.py` | Runs one complete Transformer block, verifies input/output shape equality, and confirms expected parameter count. |
-| `check_block_gradients.py` | Uses a fake scalar loss to prove gradients reach block input, QKV weights, MLP gate weights, and norm weights. |
-| `check_transformer_stack.py` | Creates four blocks, verifies independent weights, stack output shape, and total stack parameter count. |
-| `check_stack_gradients.py` | Proves gradients reach QKV matrices in every block. |
-| `check_tinygpt.py` | Constructs the complete model, passes random token IDs, prints `[B,T,V]` logits, parameter counts, and parameter-memory estimate. |
-| `check_weight_tying.py` | Verifies embedding weight and LM-head weight are the same Python object and share the same memory pointer. |
-| `check_full_forward.py` | Loads a real token batch, runs the complete model, and prints input, target, logit shapes, devices, and dtypes. |
-| `check_model_causality.py` | Uses two sequences with identical prefixes and different futures, proving prefix logits remain identical. |
+| File                         | Internal behavior and purpose                                                                                                     |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `check_transformer_block.py` | Runs one complete Transformer block, verifies input/output shape equality, and confirms expected parameter count.                 |
+| `check_block_gradients.py`   | Uses a fake scalar loss to prove gradients reach block input, QKV weights, MLP gate weights, and norm weights.                    |
+| `check_transformer_stack.py` | Creates four blocks, verifies independent weights, stack output shape, and total stack parameter count.                           |
+| `check_stack_gradients.py`   | Proves gradients reach QKV matrices in every block.                                                                               |
+| `check_tinygpt.py`           | Constructs the complete model, passes random token IDs, prints `[B,T,V]` logits, parameter counts, and parameter-memory estimate. |
+| `check_weight_tying.py`      | Verifies embedding weight and LM-head weight are the same Python object and share the same memory pointer.                        |
+| `check_full_forward.py`      | Loads a real token batch, runs the complete model, and prints input, target, logit shapes, devices, and dtypes.                   |
+| `check_model_causality.py`   | Uses two sequences with identical prefixes and different futures, proving prefix logits remain identical.                         |
 
 ## 24.10 Loss and gradient scripts
 
-| File | Internal behavior and purpose |
-|---|---|
-| `check_cross_entropy.py` | Demonstrates how correct-token confidence changes cross-entropy loss. |
-| `check_tinygpt_loss.py` | Calculates real language-model loss on a dataset batch and compares it with `log(vocab_size)`. |
+| File                          | Internal behavior and purpose                                                                                                |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `check_cross_entropy.py`      | Demonstrates how correct-token confidence changes cross-entropy loss.                                                        |
+| `check_tinygpt_loss.py`       | Calculates real language-model loss on a dataset batch and compares it with `log(vocab_size)`.                               |
 | `check_language_gradients.py` | Calls backward on real next-token loss and confirms gradients exist in embedding, early attention, late MLP, and final norm. |
-| `check_gradient_descent.py` | Manually updates one scalar parameter using ordinary gradient descent to explain the optimizer concept. |
+| `check_gradient_descent.py`   | Manually updates one scalar parameter using ordinary gradient descent to explain the optimizer concept.                      |
 
 ## 24.11 Optimizer and learning scripts
 
-| File | Internal behavior and purpose |
-|---|---|
-| `check_optimizer_groups.py` | Prints decay and no-decay parameter groups and verifies every trainable parameter appears exactly once. |
-| `check_optimizer_step.py` | Saves a QKV weight snapshot, runs one real training step, compares before/after values, and proves parameters changed. |
-| `check_overfit_batch.py` | Repeats optimization on one fixed batch and prints loss over time to prove the model can learn and memorize a tiny example. |
-| `check_lr_schedule.py` | Prints learning rate at selected warmup, peak, decay, midpoint, and final steps. |
+| File                        | Internal behavior and purpose                                                                                               |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `check_optimizer_groups.py` | Prints decay and no-decay parameter groups and verifies every trainable parameter appears exactly once.                     |
+| `check_optimizer_step.py`   | Saves a QKV weight snapshot, runs one real training step, compares before/after values, and proves parameters changed.      |
+| `check_overfit_batch.py`    | Repeats optimization on one fixed batch and prints loss over time to prove the model can learn and memorize a tiny example. |
+| `check_lr_schedule.py`      | Prints learning rate at selected warmup, peak, decay, midpoint, and final steps.                                            |
 
 ## 24.12 Checkpoint and training scripts
 
-| File | Internal behavior and purpose |
-|---|---|
+| File                            | Internal behavior and purpose                                                                                                                                                                           |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `check_checkpoint_roundtrip.py` | Trains one step, stores reference logits and RNG state, saves a checkpoint, creates fresh model/optimizer/generator objects, restores them, and verifies identical logits and restored generator state. |
-| `train.py` | Runs full pretraining, fixed evaluation, logging, throughput measurement, learning-rate scheduling, best-checkpoint selection, latest-checkpoint saving, and resume. |
+| `train.py`                      | Runs full pretraining, fixed evaluation, logging, throughput measurement, learning-rate scheduling, best-checkpoint selection, latest-checkpoint saving, and resume.                                    |
 
 ## 24.13 Generation scripts
 
-| File | Internal behavior and purpose |
-|---|---|
-| `generate_greedy.py` | Loads `best.pt`, uses deterministic argmax decoding, and prints one continuation. |
-| `generate.py` | Command-line interface accepting prompt, token limit, temperature, top-k, top-p, seed, and checkpoint path. |
-| `check_generation.py` | Creates two generators with the same seed and proves identical sampled token sequences are produced. |
+| File                  | Internal behavior and purpose                                                                               |
+| --------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `generate_greedy.py`  | Loads `best.pt`, uses deterministic argmax decoding, and prints one continuation.                           |
+| `generate.py`         | Command-line interface accepting prompt, token limit, temperature, top-k, top-p, seed, and checkpoint path. |
+| `check_generation.py` | Creates two generators with the same seed and proves identical sampled token sequences are produced.        |
 
 ---
 
@@ -4228,14 +4282,14 @@ len(val_tokens) < context_length + 1
 
 Correct fix:
 
-- Increase corpus size
-- Prepare data again
-- Retrain tokenizer if corpus changed
-- Re-encode all splits
+* Increase corpus size
+* Prepare data again
+* Retrain tokenizer if corpus changed
+* Re-encode all splits
 
 Temporary alternative:
 
-- Reduce context length
+* Reduce context length
 
 ## 28.2 Existing experiment-directory error
 
@@ -4249,9 +4303,9 @@ while run artifacts already exist.
 
 Correct choices:
 
-- Set `resume_from` to `latest.pt`
-- Choose a new experiment name
-- Deliberately delete stale artifacts for a clean restart
+* Set `resume_from` to `latest.pt`
+* Choose a new experiment name
+* Deliberately delete stale artifacts for a clean restart
 
 Do not remove the safety guard.
 
@@ -4259,9 +4313,9 @@ Do not remove the safety guard.
 
 Likely causes:
 
-- Token data was produced by a different tokenizer
-- Model was constructed with the wrong vocabulary size
-- Old `.pt` files remained after tokenizer retraining
+* Token data was produced by a different tokenizer
+* Model was constructed with the wrong vocabulary size
+* Old `.pt` files remained after tokenizer retraining
 
 Correct fix:
 
@@ -4285,12 +4339,12 @@ Use the exact tokenizer paired with the checkpoint.
 
 Possible causes:
 
-- Insufficient steps
-- Learning rate issue
-- Dataset too limited
-- Optimizer not updating
-- Target shift error
-- Gradient-flow problem
+* Insufficient steps
+* Learning rate issue
+* Dataset too limited
+* Optimizer not updating
+* Target shift error
+* Gradient-flow problem
 
 Run the focused diagnostic scripts.
 
@@ -4298,23 +4352,23 @@ Run the focused diagnostic scripts.
 
 Inspect:
 
-- Learning rate
-- Gradient norm
-- Input token range
-- Masking
-- Intermediate values
-- Parameter initialization
+* Learning rate
+* Gradient norm
+* Input token range
+* Masking
+* Intermediate values
+* Parameter initialization
 
 ## 28.7 Generation is repetitive
 
 Possible causes:
 
-- Model is tiny
-- Dataset is small
-- Training is insufficient
-- Model overfit
-- Greedy decoding
-- Temperature too low
+* Model is tiny
+* Dataset is small
+* Training is insufficient
+* Model overfit
+* Greedy decoding
+* Temperature too low
 
 Sampling controls can help diversity but cannot create knowledge that the model never learned.
 
@@ -4322,11 +4376,11 @@ Sampling controls can help diversity but cannot create knowledge that the model 
 
 Possible causes:
 
-- Using step-zero checkpoint
-- Too little training
-- Wrong tokenizer
-- Loading wrong checkpoint
-- Validation loss remained close to random baseline
+* Using step-zero checkpoint
+* Too little training
+* Wrong tokenizer
+* Loading wrong checkpoint
+* Validation loss remained close to random baseline
 
 ---
 
@@ -4394,10 +4448,10 @@ It is suitable for a modest corpus, not web-scale text.
 
 Future replacement:
 
-- Optimized native tokenizer
-- Parallel pair counting
-- Chunked training
-- Better data structures
+* Optimized native tokenizer
+* Parallel pair counting
+* Chunked training
+* Better data structures
 
 ## 30.2 Character-level data splitting
 
@@ -4411,10 +4465,10 @@ Loading one complete token tensor is suitable for the current corpus.
 
 Large-scale training should use:
 
-- Binary shards
-- Memory mapping
-- Streaming
-- Distributed samplers
+* Binary shards
+* Memory mapping
+* Streaming
+* Distributed samplers
 
 ## 30.4 Explicit attention matrix
 
@@ -4428,9 +4482,9 @@ This is transparent but scales quadratically with sequence length.
 
 Future improvement:
 
-- PyTorch scaled-dot-product attention
-- Flash Attention
-- Blockwise attention
+* PyTorch scaled-dot-product attention
+* Flash Attention
+* Blockwise attention
 
 ## 30.5 No dropout
 
@@ -4465,11 +4519,11 @@ Metrics are printed to the console.
 
 Future improvements:
 
-- JSON Lines metrics
-- CSV logs
-- TensorBoard
-- Weights & Biases
-- Experiment database
+* JSON Lines metrics
+* CSV logs
+* TensorBoard
+* Weights & Biases
+* Experiment database
 
 ## 30.9 No early stopping
 
@@ -4560,14 +4614,14 @@ Best checkpoint
 
 using:
 
-- Train loss
-- Validation loss
-- Test loss
-- Perplexity
-- Prompt continuations
-- Next-token distributions
-- Memorization checks
-- Overfitting analysis
+* Train loss
+* Validation loss
+* Test loss
+* Perplexity
+* Prompt continuations
+* Next-token distributions
+* Memorization checks
+* Overfitting analysis
 
 ## 32.2 Instruction dataset
 
@@ -4599,9 +4653,9 @@ Special-token design must be handled carefully because modifying the tokenizer a
 
 Possible approaches include:
 
-- Reserve chat tokens before pretraining
-- Extend vocabulary and initialize new rows
-- Use text-based delimiters already representable by byte BPE
+* Reserve chat tokens before pretraining
+* Extend vocabulary and initialize new rows
+* Use text-based delimiters already representable by byte BPE
 
 ## 32.4 Supervised fine-tuning
 
@@ -4645,23 +4699,23 @@ Generated tokens can be returned incrementally.
 
 Later improvements include:
 
-- KV cache
-- Quantization
-- Batched inference
-- CPU optimization
-- Compiled execution
-- GQA
-- Flash Attention
+* KV cache
+* Quantization
+* Batched inference
+* CPU optimization
+* Compiled execution
+* GQA
+* Flash Attention
 
 ## 32.11 Preference alignment
 
 For conceptual completeness:
 
-- Preference pairs
-- Reward models
-- DPO
-- RLHF
-- Safety evaluation
+* Preference pairs
+* Reward models
+* DPO
+* RLHF
+* Safety evaluation
 
 These are later alignment stages, not prerequisites for the first functioning TinyChatGPT.
 
