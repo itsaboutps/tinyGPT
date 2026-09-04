@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        TinyChatGPT
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/static/styles.css"
+    >
+
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <header class="top-bar">
+
+            <div>
+
+                <h1>
+                    TinyChatGPT
+                </h1>
+
+                <p id="status-text">
+                    Connecting...
+                </p>
+
+            </div>
+
+
+            <button
+                id="new-chat-button"
+                class="secondary-button"
+                type="button"
+            >
+                + New Chat
+            </button>
+
+        </header>
+
+
+        <main
+            id="chat-container"
+            class="chat-container"
+        >
+
+            <section
+                id="welcome-panel"
+                class="welcome-panel"
+            >
+
+                <h2>
+                    How can I help you?
+                </h2>
+
+                <p>
+                    This interface is running
+                    your own TinyChatGPT model.
+                </p>
+
+            </section>
+
+        </main>
+
+
+        <footer class="composer-area">
+
+            <form
+                id="message-form"
+                class="message-form"
+            >
+
+                <textarea
+                    id="message-input"
+                    rows="1"
+                    placeholder="Message TinyChatGPT..."
+                    autocomplete="off"
+                ></textarea>
+
+
+                <button
+                    id="send-button"
+                    type="submit"
+                >
+                    Send
+                </button>
+
+            </form>
+
+
+            <div
+                id="conversation-info"
+                class="conversation-info"
+            ></div>
+
+        </footer>
+
+    </div>
+
+
+    <script
+        src="/static/app.js"
+    ></script>
+
+</body>
