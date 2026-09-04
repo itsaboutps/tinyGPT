@@ -1,7 +1,13 @@
 from dataclasses import dataclass
 import math
 
-
+# - Central configuration.
+#    - It controls:
+#        - model size
+#        - training settings
+#        - data paths
+#        - tokenizer settings
+#        - run/checkpoint identity
 
 @dataclass
 class RunConfig:
@@ -26,6 +32,7 @@ class RunConfig:
             raise ValueError(
                 "checkpoint_root cannot be empty"
             )
+
 
 
 @dataclass
@@ -250,4 +257,130 @@ class TokenizerConfig:
                 "min_pair_frequency must be at least 2"
             )
             
-            
+@dataclass
+class SFTConfig:
+
+    batch_size: int = 4
+
+    gradient_accumulation_steps: int = 4
+
+    learning_rate: float = 5e-5
+
+    weight_decay: float = 0.1
+
+    grad_clip_norm: float = 1.0
+
+    max_epochs: int = 20
+
+    seed: int = 123
+
+
+    def __post_init__(self):
+
+        if self.batch_size <= 0:
+            raise ValueError(
+                "batch_size must be greater than 0"
+            )
+
+        if self.gradient_accumulation_steps <= 0:
+            raise ValueError(
+                "gradient_accumulation_steps "
+                "must be greater than 0"
+            )
+
+        if self.learning_rate <= 0:
+            raise ValueError(
+                "learning_rate must be greater than 0"
+            )
+
+        if self.weight_decay < 0:
+            raise ValueError(
+                "weight_decay cannot be negative"
+            )
+
+        if self.grad_clip_norm <= 0:
+            raise ValueError(
+                "grad_clip_norm must be greater than 0"
+            )
+
+        if self.max_epochs <= 0:
+            raise ValueError(
+                "max_epochs must be greater than 0"
+            )
+
+@dataclass
+class SFTRunConfig:
+
+    experiment_name: str = (
+        "tinychat_sft_batched_v1"
+    )
+
+    checkpoint_root: str = (
+        "checkpoints"
+    )
+
+    base_checkpoint: str = (
+        "checkpoints/"
+        "tinystories_5mb_v1/"
+        "best.pt"
+    )
+
+    resume_from: str | None = None
+
+
+    def __post_init__(self):
+
+        if not self.experiment_name.strip():
+            raise ValueError(
+                "experiment_name cannot be empty"
+            )
+
+        if not self.checkpoint_root.strip():
+            raise ValueError(
+                "checkpoint_root cannot be empty"
+            )
+
+        if not self.base_checkpoint.strip():
+            raise ValueError(
+                "base_checkpoint cannot be empty"
+            )
+    
+@dataclass
+class SFTRunConfig:
+
+    experiment_name: str = (
+        "tinychat_sft_v1"
+    )
+
+    checkpoint_root: str = (
+        "checkpoints"
+    )
+
+    base_checkpoint: str = (
+        "checkpoints/"
+        "tinystories_5mb_v1/"
+        "best.pt"
+    )
+
+    resume_from: str | None = None
+
+
+    def __post_init__(self):
+
+        if not self.experiment_name.strip():
+            raise ValueError(
+                "experiment_name cannot "
+                "be empty"
+            )
+
+        if not self.checkpoint_root.strip():
+            raise ValueError(
+                "checkpoint_root cannot "
+                "be empty"
+            )
+
+        if not self.base_checkpoint.strip():
+            raise ValueError(
+                "base_checkpoint cannot "
+                "be empty"
+            )
