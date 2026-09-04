@@ -47,22 +47,32 @@ class TransformerBlock(nn.Module):
     def forward(
         self,
         x: torch.Tensor,
+        attention_mask: torch.Tensor | None = None,
     ) -> torch.Tensor:
 
         x = (
             x
             +
             self.attention(
-                self.attention_norm(x)
+                self.attention_norm(
+                    x
+                ),
+                attention_mask=(
+                    attention_mask
+                ),
             )
         )
+
 
         x = (
             x
             +
             self.mlp(
-                self.mlp_norm(x)
+                self.mlp_norm(
+                    x
+                )
             )
         )
+
 
         return x

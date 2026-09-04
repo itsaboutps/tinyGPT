@@ -79,10 +79,28 @@ class TinyGPT(nn.Module):
     
         
     def forward(
-        self,
-        token_ids: torch.Tensor,
-    ) -> torch.Tensor:
+            self,
+            token_ids: torch.Tensor,
+            attention_mask: torch.Tensor | None = None,
+        ) -> torch.Tensor:
 
+        if attention_mask is not None:
+
+            if attention_mask.ndim != 2:
+                raise ValueError(
+                    "attention_mask must "
+                    "have shape [B, T]"
+                )
+
+
+            if (
+                attention_mask.shape
+                != token_ids.shape
+            ):
+                raise ValueError(
+                    "attention_mask shape "
+                    "must match token_ids"
+                )
         if token_ids.ndim != 2:
             raise ValueError(
                 "token_ids must have "
@@ -139,7 +157,10 @@ class TinyGPT(nn.Module):
 
 
         x = self.transformer(
-            x
+            x,
+            attention_mask=(
+                attention_mask
+            ),
         )
 
 

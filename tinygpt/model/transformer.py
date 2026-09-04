@@ -29,9 +29,17 @@ class TransformerStack(nn.Module):
     def forward(
         self,
         x: torch.Tensor,
+        attention_mask: torch.Tensor | None = None,
     ) -> torch.Tensor:
 
         for block in self.blocks:
-            x = block(x)
+
+            x = block(
+                x,
+                attention_mask=(
+                    attention_mask
+                ),
+            )
+
 
         return x
