@@ -72,12 +72,12 @@ class TokenDataset:
     
     
     def get_batch(
-    self,
-    batch_size: int,
-    context_length: int,
-    device: torch.device,
-    generator: torch.Generator | None = None,
-):
+                    self,
+                    batch_size: int,
+                    context_length: int,
+                    device: torch.device,
+                    generator: torch.Generator | None = None,
+                ):
         max_start = (
             len(self.tokens)
             - context_length
